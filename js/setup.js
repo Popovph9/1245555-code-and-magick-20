@@ -1,5 +1,5 @@
 'use strict';
-
+var PLAYERS = 4;
 var WIZARD_NAMES = ['Иван', 'Хуан', 'Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
 var WIZARD_LASTNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
@@ -18,22 +18,22 @@ var getRandomInRange = function (min, max) {
 };
 
 var renderWizard = function (wizardName, wizardLastName, coat, eyes) {
-  var wizradsPull = [];
-  for (var i = 0; i < 4; i++) {
+  var wizradsArray = [];
+  for (var i = 0; i < PLAYERS; i++) {
     var customWizard = {
       name: wizardName[getRandomInRange(0, wizardName.length - 1)] + ' ' + wizardLastName[getRandomInRange(0, wizardLastName.length - 1)],
       coatColor: coat[getRandomInRange(0, coat.length - 1)],
       eyesColor: eyes[getRandomInRange(0, eyes.length - 1)]
     };
-    wizradsPull.push(customWizard);
+    wizradsArray.push(customWizard);
   }
-  return wizradsPull;
+  return wizradsArray;
 };
 
 var wizards = renderWizard(WIZARD_NAMES, WIZARD_LASTNAMES, COAT_COLORS, EYES_COLORS);
 
 var renderSimilar = function () {
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < PLAYERS; i++) {
     var fragment = similarTemplate.cloneNode(true);
     fragment.querySelector('.setup-similar-label').textContent = wizards[i].name;
     fragment.querySelector('.wizard-coat').style.fill = wizards[i].coatColor;
