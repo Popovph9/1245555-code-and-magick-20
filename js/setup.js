@@ -25,12 +25,18 @@ var openPopup = function () {
   setupBlock.classList.remove('hidden');
 
   document.addEventListener('keydown', popupEscHandler);
+  playerEyes.addEventListener('click', eyesClickHandler);
+  playerCoat.addEventListener('click', coatClickHandler);
+  currentFierball.addEventListener('click', fireballClickHandler);
 };
 
 var closePopup = function () {
   setupBlock.classList.add('hidden');
 
   document.removeEventListener('keydown', popupEscHandler);
+  playerEyes.removeEventListener('click', eyesClickHandler);
+  playerCoat.removeEventListener('click', coatClickHandler);
+  currentFierball.removeEventListener('click', fireballClickHandler);
 };
 
 setupOpen.addEventListener('click', function () {
@@ -72,8 +78,7 @@ var setFierballColor = function (arr) {
   return playerFierball.style.backgroundColor;
 };
 
-currentFierball.addEventListener('click', function () {
-
+var setCuastomFireball = function () {
   var fireBallColor = setFierballColor(FIERBALL_COLORS);
   if (fireBallColor === 'rgb(238, 72, 48)') {
     fireBallColor = '#ee4830';
@@ -88,25 +93,37 @@ currentFierball.addEventListener('click', function () {
   }
 
   fierballField.value = fireBallColor;
-});
+};
+
+var fireballClickHandler = function () {
+  setCuastomFireball();
+};
 
 var setEyesColor = function (arr) {
   currentEyes.style.fill = arr[getRandomInRange(0, arr.length - 1)];
   return currentEyes.style.fill;
 };
 
-playerEyes.addEventListener('click', function () {
+var setCustomEye = function () {
   eyesField.value = setEyesColor(EYES_COLORS);
-});
+};
+
+var eyesClickHandler = function () {
+  setCustomEye();
+};
 
 var setCoatColor = function (arr) {
   currentCoat.style.fill = arr[getRandomInRange(0, arr.length - 1)];
   return currentCoat.style.fill;
 };
 
-playerCoat.addEventListener('click', function () {
+var setCustomCoat = function () {
   coatField.value = setCoatColor(COAT_COLORS);
-});
+};
+
+var coatClickHandler = function () {
+  setCustomCoat();
+};
 
 document.querySelector('.setup-similar').classList.remove('hidden');
 
