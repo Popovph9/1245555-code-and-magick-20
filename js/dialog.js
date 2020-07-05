@@ -6,6 +6,7 @@
     y: 80 + 'px'
   };
 
+  var form = document.querySelector('.setup-wizard-form');
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = document.querySelector('.setup-close');
   var setupBlock = document.querySelector('.setup');
@@ -54,6 +55,15 @@
   setupClose.addEventListener('keydown', function (evt) {
     window.util.isEscEvent(evt, closePopup);
   });
+
+  var formSubmitHadler = function (evt) {
+    window.backend.save(new FormData(form), function () {
+      setupBlock.classList.add('hidden');
+    });
+    evt.preventDefault();
+  };
+
+  form.addEventListener('submit', formSubmitHadler);
 
   setupControl.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
