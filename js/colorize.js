@@ -36,8 +36,96 @@ window.colorize = (function () {
     fierballField.value = fireBallColor;
   };
 
+  var coatColor = 'rgb(101, 137, 164)';
+  var eyesColor = 'black';
+
+  var PLAYERS = 4;
+
+  document.querySelector('.setup-similar').classList.remove('hidden');
+
+  var similarList = document.querySelector('.setup-similar-list');
+  var similarTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+
+  var wizards = [];
+
+  var renderSimilar = function (wizard) {
+    var wizardElement = similarTemplate.cloneNode(true);
+    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
+    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.colorEyes;
+    return wizardElement;
+  };
+
+  var renderWizards = function (data) {
+
+    var fragment = document.createDocumentFragment();
+
+    var takeNumber = data.length > PLAYERS ? PLAYERS : data.length;
+    similarList.innerHTML = '';
+
+    for (var i = 0; i < takeNumber; i++) {
+      fragment.appendChild(renderSimilar(data[i]));
+    }
+    similarList.appendChild(fragment);
+  };
+
+  var loadDataHandler = function (data) {
+    wizards = data;
+
+    renderWizards(wizards);
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  window.backend.load(loadDataHandler, errorHandler);
+
+  var getRank = function (wizard) {
+    var rank = 0;
+
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+    return rank;
+  };
+
+  var namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var updateWizards = function () {
+    renderWizards(wizards.slice().sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+
+      return rankDiff;
+    }));
+  };
+
   var setEyesColor = function (arr) {
-    currentEyes.style.fill = arr[window.rand.getRandomInRange(0, arr.length - 1)];
+    var newColor = arr[window.rand.getRandomInRange(0, arr.length - 1)];
+    currentEyes.style.fill = newColor;
+    eyesColor = newColor;
     return currentEyes.style.fill;
   };
 
@@ -46,7 +134,9 @@ window.colorize = (function () {
   };
 
   var setCoatColor = function (arr) {
-    currentCoat.style.fill = arr[window.rand.getRandomInRange(0, arr.length - 1)];
+    var newColor = arr[window.rand.getRandomInRange(0, arr.length - 1)];
+    currentCoat.style.fill = newColor;
+    coatColor = newColor;
     return currentCoat.style.fill;
   };
 
@@ -54,21 +144,29 @@ window.colorize = (function () {
     coatField.value = setCoatColor(COAT_COLORS);
   };
 
+  var fireballClickHandler = function () {
+    setCuastomFireball();
+  };
+
+  var eyesChangeHandler = function () {
+    setCustomEye();
+    window.debounce(updateWizards);
+  };
+
+  var coatChangeHandler = function () {
+    setCustomCoat();
+    window.debounce(updateWizards);
+  };
+
   return {
     COAT_COLORS: ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'],
     EYES_COLORS: ['black', 'red', 'blue', 'yellow', 'green'],
     FIERBALL_COLORS: ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'],
 
-    fireballClickHandler: function () {
-      setCuastomFireball();
-    },
+    fireballClickHandler: fireballClickHandler,
 
-    eyesClickHandler: function () {
-      setCustomEye();
-    },
+    eyesChangeHandler: eyesChangeHandler,
 
-    coatClickHandler: function () {
-      setCustomCoat();
-    }
+    coatChangeHandler: coatChangeHandler
   };
 })();

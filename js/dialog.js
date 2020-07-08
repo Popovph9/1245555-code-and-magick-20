@@ -24,8 +24,8 @@
     setupBlock.classList.remove('hidden');
 
     document.addEventListener('keydown', popupEscHandler);
-    playerEyes.addEventListener('click', window.colorize.eyesClickHandler);
-    playerCoat.addEventListener('click', window.colorize.coatClickHandler);
+    playerEyes.addEventListener('click', window.colorize.eyesChangeHandler);
+    playerCoat.addEventListener('click', window.colorize.coatChangeHandler);
     currentFierball.addEventListener('click', window.colorize.fireballClickHandler);
     resetDialog();
   };
@@ -34,14 +34,13 @@
     setupBlock.classList.add('hidden');
 
     document.removeEventListener('keydown', popupEscHandler);
-    playerEyes.removeEventListener('click', window.colorize.eyesClickHandler);
-    playerCoat.removeEventListener('click', window.colorize.coatClickHandler);
+    playerEyes.removeEventListener('click', window.colorize.eyesChangeHandler);
+    playerCoat.removeEventListener('click', window.colorize.coatChangeHandler);
     currentFierball.removeEventListener('click', window.colorize.fireballClickHandler);
   };
 
   setupOpen.addEventListener('click', function () {
     openPopup();
-
   });
 
   setupOpen.addEventListener('keydown', function (evt) {
